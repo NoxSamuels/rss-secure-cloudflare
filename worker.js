@@ -49,23 +49,28 @@ export default {
               cleanModel = "grok-2-latest"; // Safe stable fallback for backend execution
             }
 
+            const reqBody = {
+              model: cleanModel,
+              max_tokens: 1000,
+              messages: [
+                { role: "system", content: sys },
+                { role: "user", content: user }
+              ]
+            };
+            
             const res = await fetch("https://api.x.ai/v1/chat/completions", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${apiKey}`
               },
-              body: JSON.stringify({
-                model: cleanModel,
-                max_tokens: 1000,
-                messages: [
-                  { role: "system", content: sys },
-                  { role: "user", content: user }
-                ]
-              })
+              body: JSON.stringify(reqBody)
             });
 
-            if (!res.ok) throw new Error(`API Error: ${res.status} ${res.statusText}`);
+            if (!res.ok) {
+              const errText = await res.text();
+              throw new Error(`API Error: ${res.status} ${res.statusText} - ${errText}`);
+            }
             const data = await res.json();
             return data.choices[0].message.content;
           };
