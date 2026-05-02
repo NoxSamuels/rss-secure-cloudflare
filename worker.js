@@ -45,9 +45,6 @@ export default {
 
           const callModel = async (sys, user) => {
             let cleanModel = model.replace(/^x-ai\//, "");
-            if (cleanModel === "grok-4.1-fast" || cleanModel === "grok-4.1-fast-reasoning") {
-              cleanModel = "grok-2-latest"; // Safe stable fallback for backend execution
-            }
 
             const reqBody = {
               model: cleanModel,

@@ -144,7 +144,7 @@
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${userApiKey}`
         },
-        body: JSON.stringify({ intent, presetLbl, model: "grok-4.1-fast" })
+        body: JSON.stringify({ intent, presetLbl, model: "grok-4.1-fast-reasoning" })
       });
 
       if (!response.ok) {
