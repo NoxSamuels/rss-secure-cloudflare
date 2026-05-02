@@ -1,12 +1,13 @@
 export default {
   async fetch(request, env) {
-    // Only allow POST requests for the API
+    // Handle CORS Preflight perfectly
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-api-key',
+          'Access-Control-Max-Age': '86400',
         }
       });
     }
@@ -180,6 +181,8 @@ export default {
           'Cache-Control': 'no-cache',
           'Connection': 'keep-alive',
           'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-api-key'
         }
       });
     } catch (err) {
