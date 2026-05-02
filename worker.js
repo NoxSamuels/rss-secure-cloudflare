@@ -18,10 +18,10 @@ export default {
     try {
       const { intent, presetLbl, model } = await request.json();
       
-      // Use the securely stored API key in Cloudflare Secrets
-      const apiKey = env.XAI_API_KEY;
+      // Use the user's provided API key, or fallback to the one in Cloudflare Secrets
+      const apiKey = request.headers.get('Authorization')?.replace('Bearer ', '') || env.XAI_API_KEY;
       if (!apiKey) {
-        return new Response('Missing API Key in Cloudflare Secrets', { status: 500 });
+        return new Response('Missing API Key. Please provide an xAI key.', { status: 401 });
       }
 
       // Initialize Server-Sent Events (SSE) stream

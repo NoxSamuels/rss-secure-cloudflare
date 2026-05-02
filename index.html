@@ -80,6 +80,12 @@
   <h1>HoloTriad Agent Architecture v3.6 - Secure Eval</h1>
   
   <div class="panel">
+    <div style="margin-bottom: 15px;">
+      <label for="apiKey" style="display:block; margin-bottom:5px; font-weight:bold; color:#00e5a0;">Enter your xAI API Key:</label>
+      <input type="password" id="apiKey" placeholder="xai-..." style="width: 100%; background: #020b12; border: 1px solid #0d1a26; color: #b0c8d8; padding: 10px; font-family: inherit;">
+      <div style="font-size: 11px; color: #5a7585; margin-top: 4px;">Your key is sent directly to the secure backend and is never stored.</div>
+    </div>
+
     <select id="preset">
       <option value="Research Protocol">Research Protocol</option>
       <option value="Agentic Overreach">Agentic Overreach</option>
@@ -114,12 +120,18 @@
   document.getElementById('runBtn').addEventListener('click', async () => {
     const intent = document.getElementById('intent').value;
     const presetLbl = document.getElementById('preset').value;
+    const userApiKey = document.getElementById('apiKey').value.trim();
     const out = document.getElementById('output');
     const btn = document.getElementById('runBtn');
     
     // REPLACE THIS URL with your Cloudflare Worker URL
     const BACKEND_URL = 'https://your-worker-name.your-subdomain.workers.dev'; 
     
+    if (!userApiKey) {
+      alert("Please enter an xAI API key.");
+      return;
+    }
+
     out.style.display = 'block';
     out.innerHTML = '<i>Establishing secure connection to backend...</i>';
     btn.disabled = true;
@@ -127,7 +139,10 @@
     try {
       const response = await fetch(BACKEND_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userApiKey}`
+        },
         body: JSON.stringify({ intent, presetLbl, model: "grok-4.1-fast" })
       });
 
